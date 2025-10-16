@@ -395,7 +395,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/yourusername/chesstalk.git
+   git clone https://github.com/sebas80sebas/chesstalk.git
    ```
 
 2. **Create a feature branch**
