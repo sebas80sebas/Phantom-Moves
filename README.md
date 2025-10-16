@@ -470,14 +470,10 @@ copies or substantial portions of the Software.
 
 **Project Creator:** [Your Name]
 
-- 📧 Email: [your.email@example.com]
-- 🐙 GitHub: [@yourusername](https://github.com/yourusername)
-- 🔗 LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+- 📧 Email: [sebas80sebas@gmail.com]
+- 🐙 GitHub: [@sebas80sebas](https://github.com/sebas80sebas)
+- 🔗 LinkedIn: [My LinkedIn](https://www.linkedin.com/in/iv%C3%A1n-sebasti%C3%A1n-loor-weir-386305271)
 
-**Project Repository:** [https://github.com/yourusername/chesstalk](https://github.com/yourusername/chesstalk)
+**Project Repository:** [https://github.com/sebas80sebas/chesstalk](https://github.com/sebas80sebas/chesstalk)
 
 **ChessTalk** - Making chess accessible to everyone, one move at a time.
-
-[⬆ Back to Top](#️-chesstalk---voice-controlled-blind-chess)
-
-</div>
