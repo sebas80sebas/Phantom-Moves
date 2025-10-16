@@ -464,7 +464,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## 📧 Contact
 
-**Project Creator:** [Your Name]
+**Project Creator:** [Iván Sebastián Loor Weir]
 
 - 📧 Email: [sebas80sebas@gmail.com]
 - 🐙 GitHub: [@sebas80sebas](https://github.com/sebas80sebas)
