@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChessTalk</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="chessground.css" />
+  <link rel="stylesheet" href="chessgroundbase.css" />
+  <link rel="stylesheet" href="chessgroundbrown.css" />
+</head>
+<body>
+  <h1>ChessTalk</h1>
+  <!-- Start screen -->
+  <div id="start-screen">
+    <h2>Welcome to ChessTalk!</h2>
+    <img src="chesstalk.png" alt="Logo" style="max-width: 200px;">
+    <button id="startButton">Start Game</button>
+  </div>
+<!-- Main board container -->
+<div id="container" style="display: none;">
+  <div id="board-container">
+    <div id="board" class="cg-board"></div>
+    <div id="status">Waiting...</div>
+    <button id="voiceButton" disabled>Speak</button>
+    <button id="drawButton">Request Draw</button>
+    <button id="surrenderButton">Resign</button> 
+    <button id="exitButton">Exit</button> 
+  </div>
+  <div id="info-container">
+    <h2>Moves</h2>
+    <ul id="moves"></ul>
+    <h3>Messages</h3>
+    <div id="moveMessages"></div>
+  </div>
+</div>
+<!-- Modal for RESIGNATION confirmation -->
+<div id="surrenderConfirm" class="modal" style="display: none;">
+  <div class="modal-content">
+    <p>Are you sure you want to resign?</p>
+    <button id="confirmSurrender">Yes</button>
+    <button id="cancelSurrender">No</button>
+  </div>
+</div>
+<!-- Modal for EXIT confirmation -->
+<div id="exitConfirm" class="modal" style="display: none;">
+  <div class="modal-content">
+    <p>Are you sure you want to exit to the main menu?</p>
+    <button id="confirmExit">Yes</button>
+    <button id="cancelExit">No</button>
+  </div>
+</div>
+  <!-- Confirmation modal to accept draw -->
+  <div id="drawConfirm" class="modal" style="display: none;">
+    <div class="modal-content">
+      <p>Accept draw proposed by opponent?</p>
+      <button id="acceptDraw">Accept</button>
+      <button id="rejectDraw">Reject</button>
+    </div>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
