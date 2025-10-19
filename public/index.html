@@ -11,16 +11,41 @@
 </head>
 <body>
   <h1>ChessTalk</h1>
+  <h2>Speak, Move & They'll Move.</h2>
+  
   <!-- Start screen -->
   <div id="start-screen">
-    <h2>Speak, Move & They'll Move.</h2>
     <img src="icon.png" alt="Logo" style="max-width: 200px;">
+
+    <!-- Time selection -->
+    <div id="time-selector">
+      <h3>Select Game Time</h3>
+      <button class="time-option" data-time="300">5 Minutes</button>
+      <button class="time-option" data-time="600">10 Minutes</button>
+      <button class="time-option" data-time="900">15 Minutes</button>
+      <button class="time-option" data-time="0">No Limit</button>
+    </div>
+
     <button id="startButton">Start Game</button>
   </div>
+   
 <!-- Main board container -->
 <div id="container" style="display: none;">
   <div id="board-container">
+    <!-- Timer for Black (top) -->
+    <div id="timer-black" class="timer">
+      <span class="player-label">Black</span>
+      <span class="time-display">--:--</span>
+    </div>
+    
     <div id="board" class="cg-board"></div>
+    
+    <!-- Timer for White (bottom) -->
+    <div id="timer-white" class="timer timer-active">
+      <span class="player-label">White</span>
+      <span class="time-display">--:--</span>
+    </div>
+    
     <div id="status">Waiting...</div>
     <button id="voiceButton" disabled>Speak</button>
     <button id="drawButton">Request Draw</button>
