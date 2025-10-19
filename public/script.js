@@ -24,53 +24,91 @@ const cg = Chessground(boardElement, {
     highlight: { lastMove: true, check: true }
 });
 
-
 const voiceCommands = {
-    'a1': 'a1', 'a2': 'a2', /* ... */ 'h8': 'h8',
+    // Squares
+    'a1': 'a1', 'a2': 'a2', 'a3': 'a3', 'a4': 'a4', 'a5': 'a5', 'a6': 'a6', 'a7': 'a7', 'a8': 'a8',
+    'b1': 'b1', 'b2': 'b2', 'b3': 'b3', 'b4': 'b4', 'b5': 'b5', 'b6': 'b6', 'b7': 'b7', 'b8': 'b8',
+    'c1': 'c1', 'c2': 'c2', 'c3': 'c3', 'c4': 'c4', 'c5': 'c5', 'c6': 'c6', 'c7': 'c7', 'c8': 'c8',
+    'd1': 'd1', 'd2': 'd2', 'd3': 'd3', 'd4': 'd4', 'd5': 'd5', 'd6': 'd6', 'd7': 'd7', 'd8': 'd8',
+    'e1': 'e1', 'e2': 'e2', 'e3': 'e3', 'e4': 'e4', 'e5': 'e5', 'e6': 'e6', 'e7': 'e7', 'e8': 'e8',
+    'f1': 'f1', 'f2': 'f2', 'f3': 'f3', 'f4': 'f4', 'f5': 'f5', 'f6': 'f6', 'f7': 'f7', 'f8': 'f8',
+    'g1': 'g1', 'g2': 'g2', 'g3': 'g3', 'g4': 'g4', 'g5': 'g5', 'g6': 'g6', 'g7': 'g7', 'g8': 'g8',
+    'h1': 'h1', 'h2': 'h2', 'h3': 'h3', 'h4': 'h4', 'h5': 'h5', 'h6': 'h6', 'h7': 'h7', 'h8': 'h8',
+    
+    // Pieces - English
     'rook': 'r', 'knight': 'n', 'bishop': 'b', 'queen': 'q', 'king': 'k', 'pawn': 'p',
-    'move': 'move', 'to': 'to', 'takes': 'takes', 'castle kingside': 'O-O', 'castle queenside': 'O-O-O',
-    'check': '+', 'checkmate': '#', 'undo': 'undo',
-    'read': 'read',
-    'i': 'i', 'resign': 'resignation',
-    'draw': 'draw', 
-    'capture': 'takes'
+    
+    // Pieces - Spanish
+    'torre': 'r', 'caballo': 'n', 'alfil': 'b', 'reina': 'q', 'dama': 'q', 'rey': 'k', 'peón': 'p', 'peon': 'p',
+    
+    // Commands - English
+    'move': 'move', 'to': 'to', 'takes': 'takes', 'capture': 'takes',
+    'castle kingside': 'O-O', 'castle queenside': 'O-O-O',
+    'check': '+', 'checkmate': '#', 'undo': 'undo', 'read': 'read',
+    'resign': 'resignation', 'draw': 'draw',
+    
+    // Commands - Spanish
+    'mover': 'move', 'mueve': 'move', 'a': 'to', 'come': 'takes', 'captura': 'takes',
+    'enroque corto': 'O-O', 'enroque largo': 'O-O-O',
+    'jaque': '+', 'jaque mate': '#', 'deshacer': 'undo', 'leer': 'read',
+    'rendirse': 'resignation', 'tablas': 'draw', 'empate': 'draw'
 };
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 let isListening = false;
+let currentLanguage = 'en-US'; // Default language
 
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
+    recognition.lang = currentLanguage;
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
+
+    // Language selector
+    const languageSelector = document.createElement('select');
+    languageSelector.id = 'languageSelector';
+    languageSelector.innerHTML = `
+        <option value="en-US">English</option>
+        <option value="es-ES">Español</option>
+    `;
+    languageSelector.style.cssText = 'margin: 10px; padding: 5px; font-size: 14px;';
+    languageSelector.addEventListener('change', (e) => {
+        currentLanguage = e.target.value;
+        recognition.lang = currentLanguage;
+        const langName = currentLanguage === 'en-US' ? 'English' : 'Español';
+        moveMessages.innerHTML += `<p style="color: blue;">Language changed to ${langName}</p>`;
+    });
+    voiceButton.parentNode.insertBefore(languageSelector, voiceButton);
 
     voiceButton.addEventListener('click', () => {
         if (isListening) {
             recognition.stop();
             isListening = false;
-            voiceButton.textContent = 'Speak';
+            voiceButton.textContent = currentLanguage === 'en-US' ? 'Speak' : 'Hablar';
         } else {
             recognition.start();
             isListening = true;
-            voiceButton.textContent = 'Listening...';
+            voiceButton.textContent = currentLanguage === 'en-US' ? 'Listening...' : 'Escuchando...';
         }
     });
 
     recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         console.log('[DEBUG] Recognized text:', transcript);
-        voiceButton.textContent = 'Speak';
+        voiceButton.textContent = currentLanguage === 'en-US' ? 'Speak' : 'Hablar';
         isListening = false;
         processVoiceCommand(transcript);
     };
 
     recognition.onerror = (event) => {
         console.error('[ERROR] Voice recognition error:', event.error);
-        voiceButton.textContent = 'Speak';
+        voiceButton.textContent = currentLanguage === 'en-US' ? 'Speak' : 'Hablar';
         isListening = false;
-        moveMessages.innerHTML += `<p style="color: red;">Voice recognition error: ${event.error}</p>`;
+        const errorMsg = currentLanguage === 'en-US' ? 
+            `Voice recognition error: ${event.error}` : 
+            `Error de reconocimiento de voz: ${event.error}`;
+        moveMessages.innerHTML += `<p style="color: red;">${errorMsg}</p>`;
         announceMove({ color: "w", san: `Error: ${event.error}` });
     };
 
@@ -81,20 +119,24 @@ if (SpeechRecognition) {
                     recognition.start();
                 } catch (error) {
                     console.error('[ERROR] Error restarting recognition:', error);
-                    moveMessages.innerHTML += `<p style="color: red;">Error restarting recognition</p>`;
-                    announceMove({ color: "w", san: "Error restarting recognition" });
+                    const errorMsg = currentLanguage === 'en-US' ? 
+                        'Error restarting recognition' : 
+                        'Error al reiniciar reconocimiento';
+                    moveMessages.innerHTML += `<p style="color: red;">${errorMsg}</p>`;
+                    announceMove({ color: "w", san: errorMsg });
                     isListening = false;
-                    voiceButton.textContent = 'Speak';
+                    voiceButton.textContent = currentLanguage === 'en-US' ? 'Speak' : 'Hablar';
                 }
             }, 500);
         } else {
-            voiceButton.textContent = 'Speak';
+            voiceButton.textContent = currentLanguage === 'en-US' ? 'Speak' : 'Hablar';
         }
     };
 } else {
     voiceButton.disabled = true;
-    voiceButton.textContent = 'Voice not supported';
-    moveMessages.innerHTML += `<p style="color: red;">Your browser does not support voice recognition</p>`;
+    const notSupported = 'Voice not supported / Voz no soportada';
+    voiceButton.textContent = notSupported;
+    moveMessages.innerHTML += `<p style="color: red;">Your browser does not support voice recognition / Tu navegador no soporta reconocimiento de voz</p>`;
     announceMove({ color: "w", san: "Browser does not support voice recognition" });
 }
 
@@ -112,14 +154,17 @@ function initSpeechSynthesis() {
             console.log(`Voices loaded: ${voices.length} available`);
             
             // Optional: announce that the game is ready
-            const utterance = new SpeechSynthesisUtterance("ChessTalk is ready. White begins.");
-            utterance.lang = "en-US";
+            const welcomeMsg = currentLanguage === 'en-US' ? 
+                "ChessTalk is ready. White begins." :
+                "ChessTalk está listo. Blancas comienzan.";
+            const utterance = new SpeechSynthesisUtterance(welcomeMsg);
+            utterance.lang = currentLanguage;
             
             const englishVoices = voices.filter(voice => voice.lang.includes('en'));
             if (englishVoices.length > 0) {
                 utterance.voice = englishVoices[0];
-                synth.speak(utterance);
             }
+            synth.speak(utterance);
         };
     }
 }
@@ -167,11 +212,17 @@ function handleMove(orig, dest) {
 function announceMove(move) {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance();
-    utterance.lang = "en-US";
-    utterance.text = `${move.color === "w" ? "Player 1" : "Player 2"} made the move ${move.san}`;
+    utterance.lang = currentLanguage;
+    
+    const player = currentLanguage === 'en-US' ? 
+        (move.color === "w" ? "Player 1" : "Player 2") :
+        (move.color === "w" ? "Jugador 1" : "Jugador 2");
+    const madeMove = currentLanguage === 'en-US' ? "made the move" : "hizo el movimiento";
+    
+    utterance.text = `${player} ${madeMove} ${move.san}`;
     utterance.pitch = 1.2;
-    utterance.volume = 1.0; // Ensure maximum volume
-    utterance.rate = 0.9; // Speak a bit slower for better clarity
+    utterance.volume = 1.0;
+    utterance.rate = 0.9;
     
     // Get voices and configure after they are available
     let voices = synth.getVoices();
@@ -186,22 +237,22 @@ function announceMove(move) {
     }
     
     function setVoiceAndSpeak() {
-        // Filter English voices
-        const englishVoices = voices.filter(voice => voice.lang.includes('en'));
+        // Filter voices for current language
+        const languageCode = currentLanguage.split('-')[0]; // 'en' or 'es'
+        const languageVoices = voices.filter(voice => voice.lang.includes(languageCode));
         
-        // Try to find Google voices first, then any English voice
-        const preferredVoice = englishVoices.find(voice => voice.name.includes('Google')) || 
-                              englishVoices[0] || 
-                              voices[0]; // Last option: any voice
+        // Try to find Google voices first, then any language-appropriate voice
+        const preferredVoice = languageVoices.find(voice => voice.name.includes('Google')) || 
+                              languageVoices[0] || 
+                              voices[0];
         
         if (preferredVoice) {
             utterance.voice = preferredVoice;
             console.log(`Using voice: ${preferredVoice.name} (${preferredVoice.lang})`);
         } else {
-            console.warn("No suitable voices found for English");
+            console.warn(`No suitable voices found for ${languageCode}`);
         }
         
-        // Cancel any previous synthesis and speak
         synth.cancel();
         synth.speak(utterance);
     }
@@ -211,11 +262,16 @@ function announceMove(move) {
 function announceState(move) {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance();
-    utterance.lang = "en-US";
-    utterance.text = `${move.color === "w" ? "Player 1" : "Player 2"}  ${move.san}`;
+    utterance.lang = currentLanguage;
+    
+    const player = currentLanguage === 'en-US' ? 
+        (move.color === "w" ? "Player 1" : "Player 2") :
+        (move.color === "w" ? "Jugador 1" : "Jugador 2");
+    
+    utterance.text = `${player} ${move.san}`;
     utterance.pitch = 1.2;
-    utterance.volume = 1.0; // Ensure maximum volume
-    utterance.rate = 0.9; // Speak a bit slower for better clarity
+    utterance.volume = 1.0;
+    utterance.rate = 0.9;
     
     // Get voices and configure after they are available
     let voices = synth.getVoices();
@@ -230,22 +286,22 @@ function announceState(move) {
     }
     
     function setVoiceAndSpeak() {
-        // Filter English voices
-        const englishVoices = voices.filter(voice => voice.lang.includes('en'));
+        // Filter voices for current language
+        const languageCode = currentLanguage.split('-')[0]; // 'en' or 'es'
+        const languageVoices = voices.filter(voice => voice.lang.includes(languageCode));
         
-        // Try to find Google voices first, then any English voice
-        const preferredVoice = englishVoices.find(voice => voice.name.includes('Google')) || 
-                              englishVoices[0] || 
-                              voices[0]; // Last option: any voice
+        // Try to find Google voices first, then any language-appropriate voice
+        const preferredVoice = languageVoices.find(voice => voice.name.includes('Google')) || 
+                              languageVoices[0] || 
+                              voices[0];
         
         if (preferredVoice) {
             utterance.voice = preferredVoice;
             console.log(`Using voice: ${preferredVoice.name} (${preferredVoice.lang})`);
         } else {
-            console.warn("No suitable voices found for English");
+            console.warn(`No suitable voices found for ${languageCode}`);
         }
         
-        // Cancel any previous synthesis and speak
         synth.cancel();
         synth.speak(utterance);
     }
@@ -253,21 +309,35 @@ function announceState(move) {
 
 function updateStatus() {
     if (game.isCheckmate()) {
-        statusElement.innerText = `Checkmate! ${game.turn() === "w" ? "Black" : "White"} wins 🎉`;
+        const msg = currentLanguage === 'en-US' ? 
+            `Checkmate! ${game.turn() === "w" ? "Black" : "White"} wins 🎉` :
+            `¡Jaque mate! ${game.turn() === "w" ? "Negras" : "Blancas"} ganan 🎉`;
+        statusElement.innerText = msg;
         setTimeout(() => {
-            announceState({ color: game.turn() === "w" ? "b" : "w", san: "made Checkmate" });
+            const announceMsg = currentLanguage === 'en-US' ? "made Checkmate" : "hizo Jaque mate";
+            announceState({ color: game.turn() === "w" ? "b" : "w", san: announceMsg });
         }, 5000);
         
     } else if (game.isCheck()) {
-        statusElement.innerText = `Check! ${game.turn() === "w" ? "White's" : "Black's"} turn`;
+        const msg = currentLanguage === 'en-US' ? 
+            `Check! ${game.turn() === "w" ? "White's" : "Black's"} turn` :
+            `¡Jaque! Turno de ${game.turn() === "w" ? "Blancas" : "Negras"}`;
+        statusElement.innerText = msg;
         setTimeout(() => {
-            announceState({ color: game.turn() === "w" ? "b" : "w", san: "made Check" });
+            const announceMsg = currentLanguage === 'en-US' ? "made Check" : "hizo Jaque";
+            announceState({ color: game.turn() === "w" ? "b" : "w", san: announceMsg });
         }, 5000);
         
     } else if (game.isDraw()) {
-        statusElement.innerText = "Draw! The game has ended 🤝";
+        const msg = currentLanguage === 'en-US' ? 
+            "Draw! The game has ended 🤝" :
+            "¡Tablas! El juego ha terminado 🤝";
+        statusElement.innerText = msg;
     } else {
-        statusElement.innerText = `${game.turn() === "w" ? "White's" : "Black's"} turn`;
+        const msg = currentLanguage === 'en-US' ? 
+            `${game.turn() === "w" ? "White's" : "Black's"} turn` :
+            `Turno de ${game.turn() === "w" ? "Blancas" : "Negras"}`;
+        statusElement.innerText = msg;
     }
 }
 
@@ -296,8 +366,11 @@ function updateMoveList() {
 }
 
 function updateMoveMessages(move) {
-    const player = move.color === "w" ? "Player 1" : "Player 2";
-    const message = `${player} made the move ${move.san}`;
+    const player = currentLanguage === 'en-US' ?
+        (move.color === "w" ? "Player 1" : "Player 2") :
+        (move.color === "w" ? "Jugador 1" : "Jugador 2");
+    const madeMove = currentLanguage === 'en-US' ? "made the move" : "hizo el movimiento";
+    const message = `${player} ${madeMove} ${move.san}`;
     
     const p = document.createElement("p");
     p.innerText = message;
@@ -306,7 +379,8 @@ function updateMoveMessages(move) {
 
 function processVoiceCommand(command) {
     console.log("[DEBUG] Command received:", command);
-    moveMessages.innerHTML += `<p>Command: ${command}</p>`;
+    const commandLabel = currentLanguage === 'en-US' ? "Command" : "Comando";
+    moveMessages.innerHTML += `<p>${commandLabel}: ${command}</p>`;
 
     const lowerCommand = command.toLowerCase();
     const parts = lowerCommand.split(' ');
@@ -341,7 +415,10 @@ function processVoiceCommand(command) {
             console.log("[DEBUG] Detected piece:", piece, "Detected destination:", to);
 
             if (!piece || !to) {
-                throw new Error("Could not identify piece or destination");
+                const errorMsg = currentLanguage === 'en-US' ? 
+                    "Could not identify piece or destination" :
+                    "No se pudo identificar la pieza o el destino";
+                throw new Error(errorMsg);
             }
 
             const moves = game.moves({ verbose: true });
@@ -351,7 +428,10 @@ function processVoiceCommand(command) {
                 handleMove(validMove.from, validMove.to);
                 announceMove(validMove);
             } else {
-                throw new Error(`Invalid move for ${piece} to ${to}`);
+                const errorMsg = currentLanguage === 'en-US' ? 
+                    `Invalid move for ${piece} to ${to}` :
+                    `Movimiento inválido para ${piece} a ${to}`;
+                throw new Error(errorMsg);
             }
         }
         else if (normalized.includes('o-o')) {
@@ -369,9 +449,15 @@ function processVoiceCommand(command) {
                 updateStatus();
                 updateMoveList();
                 updateMoveMessages(result);
-                announceMove({ color: result.color, san: `Castle ${move === 'O-O' ? 'kingside' : 'queenside'}` });
+                const castleMsg = currentLanguage === 'en-US' ?
+                    `Castle ${move === 'O-O' ? 'kingside' : 'queenside'}` :
+                    `Enroque ${move === 'O-O' ? 'corto' : 'largo'}`;
+                announceMove({ color: result.color, san: castleMsg });
             } else {
-                throw new Error("Castling not allowed");
+                const errorMsg = currentLanguage === 'en-US' ? 
+                    "Castling not allowed" :
+                    "Enroque no permitido";
+                throw new Error(errorMsg);
             }
         }
         else if (normalized.includes('resignation')) {    
@@ -381,8 +467,14 @@ function processVoiceCommand(command) {
             updateStatus();
             updateMoveList();
             
-            announceState({ color: game.turn(), san: "Are you sure you want to resign?" });
-            statusElement.innerText = "The player has requested to resign. Please confirm or cancel";
+            const resignMsg = currentLanguage === 'en-US' ? 
+                "Are you sure you want to resign?" :
+                "¿Estás seguro de que quieres rendirte?";
+            announceState({ color: game.turn(), san: resignMsg });
+            const statusMsg = currentLanguage === 'en-US' ?
+                "The player has requested to resign. Please confirm or cancel" :
+                "El jugador ha solicitado rendirse. Por favor confirma o cancela";
+            statusElement.innerText = statusMsg;
         }
         else if (normalized.includes('draw')) {    
 
@@ -407,8 +499,14 @@ function processVoiceCommand(command) {
 
             updateStatus();
             updateMoveList();
-            announceState({ color: game.turn(), san: "has proposed a draw" });
-            statusElement.innerText = "The player has requested a draw. Please confirm or cancel";
+            const drawMsg = currentLanguage === 'en-US' ? 
+                "has proposed a draw" :
+                "ha propuesto tablas";
+            announceState({ color: game.turn(), san: drawMsg });
+            const statusMsg = currentLanguage === 'en-US' ?
+                "The player has requested a draw. Please confirm or cancel" :
+                "El jugador ha solicitado tablas. Por favor confirma o cancela";
+            statusElement.innerText = statusMsg;
         } 
         
         else if (normalized.includes('undo')) {
@@ -423,33 +521,49 @@ function processVoiceCommand(command) {
                     }
                 });
                 
-                announceState({ color: undone.color, san: `Move undone: ${undone.san}` });
+                const undoMsg = currentLanguage === 'en-US' ? 
+                    `Move undone: ${undone.san}` :
+                    `Movimiento deshecho: ${undone.san}`;
+                announceState({ color: undone.color, san: undoMsg });
             } else {
-                throw new Error("No moves to undo");
+                const errorMsg = currentLanguage === 'en-US' ? 
+                    "No moves to undo" :
+                    "No hay movimientos para deshacer";
+                throw new Error(errorMsg);
             }
         }
         else if (normalized.includes('read')) {
             const history = game.history();
-            const movesText = history.length ? history.join(', ') : 'No moves';
+            const movesText = history.length ? history.join(', ') : (currentLanguage === 'en-US' ? 'No moves' : 'Sin movimientos');
             const turno = game.turn() === 'w' ? 'w' : 'b';
-            announceState({ color: turno, san: `these are the moves made: ${movesText}` });
+            const readMsg = currentLanguage === 'en-US' ? 
+                `these are the moves made: ${movesText}` :
+                `estos son los movimientos realizados: ${movesText}`;
+            announceState({ color: turno, san: readMsg });
         }
         else {
-            throw new Error("Command not recognized");
+            const errorMsg = currentLanguage === 'en-US' ? 
+                "Command not recognized" :
+                "Comando no reconocido";
+            throw new Error(errorMsg);
         }
     } catch (error) {
         console.error("[ERROR] Error in command:", error.message);
-        moveMessages.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
-        announceMove({ color: "w", san: `Error: ${error.message}` });
+        const errorLabel = currentLanguage === 'en-US' ? "Error" : "Error";
+        moveMessages.innerHTML += `<p style="color: red;">${errorLabel}: ${error.message}</p>`;
+        announceMove({ color: "w", san: `${errorLabel}: ${error.message}` });
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    announceMove({ color: "w", san: "Welcome to ChessTalk. White begins" });
+    const welcomeMsg = currentLanguage === 'en-US' ? 
+        "Welcome to ChessTalk. White begins" :
+        "Bienvenido a ChessTalk. Blancas comienzan";
+    announceMove({ color: "w", san: welcomeMsg });
     if (SpeechRecognition) {
         voiceButton.style.display = 'block';
     } else {
-        moveMessages.innerHTML += `<p style="color: red;">Your browser does not support voice recognition</p>`;
+        moveMessages.innerHTML += `<p style="color: red;">Your browser does not support voice recognition / Tu navegador no soporta reconocimiento de voz</p>`;
         announceMove({ color: "w", san: "Browser does not support voice recognition" });
     }
 });
@@ -459,11 +573,11 @@ document.addEventListener('keydown', (event) => {
         if (isListening) {
             recognition.stop();
             isListening = false;
-            voiceButton.textContent = 'Speak';
+            voiceButton.textContent = currentLanguage === 'en-US' ? 'Speak' : 'Hablar';
         } else {
             recognition.start();
             isListening = true;
-            voiceButton.textContent = 'Listening...';
+            voiceButton.textContent = currentLanguage === 'en-US' ? 'Listening...' : 'Escuchando...';
         }
     }
 });
@@ -485,12 +599,14 @@ document.addEventListener("DOMContentLoaded", () => {
       resetGame();
   
       // Start the game
-      status.textContent = "Your turn";
+      const turnMsg = currentLanguage === 'en-US' ? "Your turn" : "Tu turno";
+      status.textContent = turnMsg;
       document.getElementById("voiceButton").disabled = false;
   
       // Simulates turn change (simple example)
       setTimeout(() => {
-        status.textContent = "Opponent's turn";
+        const opponentMsg = currentLanguage === 'en-US' ? "Opponent's turn" : "Turno del oponente";
+        status.textContent = opponentMsg;
       }, 4000);
     });
   });
@@ -506,14 +622,24 @@ const cancelSurrender = document.getElementById("cancelSurrender");
 
 surrenderButton.addEventListener("click", () => {
   surrenderConfirm.style.display = "flex";
-  announceState({ color: game.turn(), san: "Are you sure you want to resign?" });
-  statusElement.innerText = "The player has requested to resign. Please confirm or cancel";
+  const resignMsg = currentLanguage === 'en-US' ? 
+      "Are you sure you want to resign?" :
+      "¿Estás seguro de que quieres rendirte?";
+  announceState({ color: game.turn(), san: resignMsg });
+  const statusMsg = currentLanguage === 'en-US' ?
+      "The player has requested to resign. Please confirm or cancel" :
+      "El jugador ha solicitado rendirse. Por favor confirma o cancela";
+  statusElement.innerText = statusMsg;
 });
 
 confirmSurrender.addEventListener("click", () => {
   surrenderConfirm.style.display = "none";
-  announceState({ color: game.turn(), san: "resigned" });
-  statusElement.innerText = "The player has resigned 🏳️";
+  const resignedMsg = currentLanguage === 'en-US' ? "resigned" : "se rindió";
+  announceState({ color: game.turn(), san: resignedMsg });
+  const statusMsg = currentLanguage === 'en-US' ? 
+      "The player has resigned 🏳️" :
+      "El jugador se ha rendido 🏳️";
+  statusElement.innerText = statusMsg;
   cg.set({ movable: { color: null, dests: new Map() } }); // Block board
 });
 
@@ -535,7 +661,10 @@ confirmExit.addEventListener("click", () => {
   exitConfirm.style.display = "none";
   container.style.display = "none";
   startScreen.style.display = "flex";
-  statusElement.innerText = "You have exited the game";
+  const exitMsg = currentLanguage === 'en-US' ? 
+      "You have exited the game" :
+      "Has salido del juego";
+  statusElement.innerText = exitMsg;
   cg.set({ movable: { color: null, dests: new Map() } }); // Block board
 });
 
@@ -544,68 +673,80 @@ cancelExit.addEventListener("click", () => {
 });
 
   
-  // Request draw button and its modal
-  const drawButton = document.getElementById("drawButton");
-  const drawConfirm = document.getElementById("drawConfirm");
-  const acceptDraw = document.getElementById("acceptDraw");
-  const rejectDraw = document.getElementById("rejectDraw");
-  
-  let drawOfferedBy = null;
-  
-  drawButton.addEventListener("click", () => {
-    if (!drawOfferedBy) {
-      drawOfferedBy = game.turn();
-  
-      // Simulates that the other player sees the offer
-      const currentTurn = game.turn();
-  
-      if (drawOfferedBy !== currentTurn) {
-        drawConfirm.style.display = "flex";
-      } else {
-        // Wait for turn change to show to the other player
-        const waitForTurnChange = setInterval(() => {
-          if (game.turn() !== drawOfferedBy) {
-            clearInterval(waitForTurnChange);
-            drawConfirm.style.display = "flex";
-          }
-        }, 300);
-      }
+// Request draw button and its modal
+const drawButton = document.getElementById("drawButton");
+const drawConfirm = document.getElementById("drawConfirm");
+const acceptDraw = document.getElementById("acceptDraw");
+const rejectDraw = document.getElementById("rejectDraw");
+
+let drawOfferedBy = null;
+
+drawButton.addEventListener("click", () => {
+  if (!drawOfferedBy) {
+    drawOfferedBy = game.turn();
+
+    // Simulates that the other player sees the offer
+    const currentTurn = game.turn();
+
+    if (drawOfferedBy !== currentTurn) {
+      drawConfirm.style.display = "flex";
+    } else {
+      // Wait for turn change to show to the other player
+      const waitForTurnChange = setInterval(() => {
+        if (game.turn() !== drawOfferedBy) {
+          clearInterval(waitForTurnChange);
+          drawConfirm.style.display = "flex";
+        }
+      }, 300);
     }
-    announceState({ color: game.turn(), san: "has proposed a draw" });
-    statusElement.innerText = "The player has requested a draw. Please confirm or cancel";
-  });
-  
-  acceptDraw.addEventListener("click", () => {
-    drawConfirm.style.display = "none";
-    statusElement.innerText = "Draw agreed! 🤝";
-    announceState({ color: game.turn(), san: "accepted the draw" });
-    drawOfferedBy = null;
-    cg.set({ movable: { color: null, dests: new Map() } }); // Block board
-  });
-  
-  rejectDraw.addEventListener("click", () => {
-    drawConfirm.style.display = "none";
-    //alert("You have rejected the draw. Continue the game.");
-    drawOfferedBy = null;
-  });
-  
-  function resetGame() {
-    game.reset(); // Reset chess logic (Chess.js)
-    cg.set({
-      // Reset board visually
-      fen: game.fen(),
-      turnColor: "white",
-      movable: {
-        color: "white",
-        dests: getValidMoves()
-      },
-      highlight: {
-        lastMove: true,
-        check: true
-      }
-    });
-  
-    statusElement.innerText = "White's turn";
-    movesList.innerHTML = "";
-    moveMessages.innerHTML = "";
   }
+  const drawMsg = currentLanguage === 'en-US' ? 
+      "has proposed a draw" :
+      "ha propuesto tablas";
+  announceState({ color: game.turn(), san: drawMsg });
+  const statusMsg = currentLanguage === 'en-US' ?
+      "The player has requested a draw. Please confirm or cancel" :
+      "El jugador ha solicitado tablas. Por favor confirma o cancela";
+  statusElement.innerText = statusMsg;
+});
+
+acceptDraw.addEventListener("click", () => {
+  drawConfirm.style.display = "none";
+  const drawAgreedMsg = currentLanguage === 'en-US' ? 
+      "Draw agreed! 🤝" :
+      "¡Tablas acordadas! 🤝";
+  statusElement.innerText = drawAgreedMsg;
+  const acceptedMsg = currentLanguage === 'en-US' ? 
+      "accepted the draw" :
+      "aceptó las tablas";
+  announceState({ color: game.turn(), san: acceptedMsg });
+  drawOfferedBy = null;
+  cg.set({ movable: { color: null, dests: new Map() } }); // Block board
+});
+
+rejectDraw.addEventListener("click", () => {
+  drawConfirm.style.display = "none";
+  drawOfferedBy = null;
+});
+
+function resetGame() {
+  game.reset(); // Reset chess logic (Chess.js)
+  cg.set({
+    // Reset board visually
+    fen: game.fen(),
+    turnColor: "white",
+    movable: {
+      color: "white",
+      dests: getValidMoves()
+    },
+    highlight: {
+      lastMove: true,
+      check: true
+    }
+  });
+
+  const turnMsg = currentLanguage === 'en-US' ? "White's turn" : "Turno de Blancas";
+  statusElement.innerText = turnMsg;
+  movesList.innerHTML = "";
+  moveMessages.innerHTML = "";
+}
