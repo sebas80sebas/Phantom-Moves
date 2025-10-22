@@ -1,6 +1,6 @@
-# 🎙️ ChessTalk - Voice-Controlled Blind Chess
+# 🎙️ Phantom Moves - Voice-Controlled Blind Chess
 
-![ChessTalk Logo](public/ChessTalk.png)
+![Phantom Moves Logo](public/phantom-moves.png)
 
 > **An innovative accessibility-focused chess application that enables players to play chess entirely through voice commands, designed specifically for blind and visually impaired users.**
 
@@ -30,11 +30,11 @@
 
 ## 📋 Overview
 
-**ChessTalk** is a groundbreaking web application that makes chess truly accessible to everyone by eliminating visual dependency entirely. Using the Web Speech API, players can make moves, hear game updates, and enjoy a complete chess experience through voice alone.
+**Phantom Moves** is a groundbreaking web application that makes chess truly accessible to everyone by eliminating visual dependency entirely. Using the Web Speech API, players can make moves, hear game updates, and enjoy a complete chess experience through voice alone.
 
-### Why ChessTalk?
+### Why Phantom Moves?
 
-Traditional digital chess platforms rely heavily on visual interaction, creating barriers for blind and visually impaired players. ChessTalk removes these barriers by providing:
+Traditional digital chess platforms rely heavily on visual interaction, creating barriers for blind and visually impaired players. Phantom Moves removes these barriers by providing:
 
 - 🎤 **Complete voice control** - No mouse or screen needed
 - 🔊 **Real-time audio feedback** - Every move is announced
@@ -102,7 +102,7 @@ Traditional digital chess platforms rely heavily on visual interaction, creating
 ## 📁 Project Structure
 
 ```
-chesstalk/
+phantom-moves/
 │
 ├── node_modules/          # Dependencies
 │   ├── chess.js/          # Chess logic library
@@ -117,7 +117,7 @@ chesstalk/
 │   ├── chessground.css    # Chessground base styles
 │   ├── chessgroundbase.css   # Chessground theme base
 │   ├── chessgroundbrown.css  # Brown chess board theme
-│   └── chesstalk.png      # Application logo
+│   └── phantom-moves.png      # Application logo
 │
 ├── server.js              # Express server configuration
 ├── package.json           # Project dependencies and scripts
@@ -141,8 +141,8 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/chesstalk.git
-   cd chesstalk
+   git clone https://github.com/sebas80sebas/phantom-moves.git
+   cd phantom-moves
    ```
 
 2. **Install dependencies**
@@ -241,7 +241,7 @@ const PORT = 3001; // Change to any available port
    - Open `http://localhost:3000` in your browser
 
 2. **Welcome screen**
-   - You'll see the ChessTalk welcome screen
+   - You'll see the Phantom Moves welcome screen
    - Click "Start Game" button
 
 3. **Board setup**
@@ -338,7 +338,7 @@ Chess is a universal game enjoyed by millions worldwide, but traditional digital
 
 ### Our Solution
 
-**ChessTalk eliminates these barriers** by providing:
+**Phantom Moves eliminates these barriers** by providing:
 
 - ✅ **Complete independence** - No visual or physical assistance needed
 - ✅ **Natural interaction** - Play using everyday language
@@ -355,7 +355,7 @@ Chess is a universal game enjoyed by millions worldwide, but traditional digital
 
 ### Accessibility Principles
 
-ChessTalk follows these core principles:
+Phantom Moves follows these core principles:
 
 1. **Perceivable** - Information communicated through audio
 2. **Operable** - Fully controllable via voice
@@ -395,7 +395,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/sebas80sebas/chesstalk.git
+   git clone https://github.com/sebas80sebas/phantom-moves.git
    ```
 
 2. **Create a feature branch**
@@ -440,7 +440,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ```
 MIT License
 
-Copyright (c) 2025-2026 ChessTalk — Developed by Iván Sebastián Loor Weir
+Copyright (c) 2025-2026 — Iván Sebastián Loor Weir
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -470,6 +470,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - 🐙 GitHub: [@sebas80sebas](https://github.com/sebas80sebas)
 - 🔗 LinkedIn: [My LinkedIn](https://www.linkedin.com/in/iv%C3%A1n-sebasti%C3%A1n-loor-weir-386305271)
 
-**Project Repository:** [https://github.com/sebas80sebas/chesstalk](https://github.com/sebas80sebas/chesstalk)
+**Project Repository:** [https://github.com/sebas80sebas/phantom-moves](https://github.com/sebas80sebas/phantom-moves)
 
-**ChessTalk** - Making chess accessible to everyone, one move at a time.
+**Phantom Moves** - Making chess accessible to everyone, one move at a time.
