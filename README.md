@@ -102,7 +102,7 @@ Traditional digital chess platforms rely heavily on visual interaction, creating
 ## 📁 Project Structure
 
 ```
-phantom-moves/
+Phantom-Moves/
 │
 ├── node_modules/          # Dependencies
 │   ├── chess.js/          # Chess logic library
@@ -141,8 +141,8 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/sebas80sebas/phantom-moves.git
-   cd phantom-moves
+   git clone https://github.com/sebas80sebas/Phantom-Moves.git
+   cd Phantom-Moves
    ```
 
 2. **Install dependencies**
@@ -395,7 +395,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/sebas80sebas/phantom-moves.git
+   git clone https://github.com/sebas80sebas/Phantom-Moves.git
    ```
 
 2. **Create a feature branch**
@@ -470,6 +470,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - 🐙 GitHub: [@sebas80sebas](https://github.com/sebas80sebas)
 - 🔗 LinkedIn: [My LinkedIn](https://www.linkedin.com/in/iv%C3%A1n-sebasti%C3%A1n-loor-weir-386305271)
 
-**Project Repository:** [https://github.com/sebas80sebas/phantom-moves](https://github.com/sebas80sebas/phantom-moves)
+**Project Repository:** [https://github.com/sebas80sebas/Phantom-Moves](https://github.com/sebas80sebas/Phantom-Moves)
 
 **Phantom Moves** - Making chess accessible to everyone, one move at a time.
