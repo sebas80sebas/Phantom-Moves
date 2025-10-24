@@ -87,9 +87,32 @@ h1 {
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
 
+.tutorial-content {
+    min-height: 500px;
+    max-height: 500px;
+    overflow-y: auto;
+    position: relative;
+    padding: 10px;
+}
+
+.tutorial-page {
+    display: none;
+    opacity: 0;
+    animation: fadeInPage 0.5s ease forwards;
+}
+
+.tutorial-page.active {
+    display: block;
+}
+
 #startButton,
+#tutorialButton,
+#prevPage,
+#nextPage,
 #freeGameButton,
-#fiveMinGameButton {
+#fiveMinGameButton,
+#closeTutorial,
+#startFromTutorial {
     padding: 15px 40px;
     font-size: 20px;
     margin: 10px;
@@ -106,16 +129,26 @@ h1 {
 }
 
 #startButton:hover,
+#tutorialButton:hover,
 #freeGameButton:hover,
-#fiveMinGameButton:hover {
+#fiveMinGameButton:hover,
+#prevPage:hover,
+#nextPage:hover,
+#closeTutorial:hover,
+#startFromTutorial:hover {
     background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 #startButton:active,
+#tutorialButton:active,
 #freeGameButton:active,
-#fiveMinGameButton:active {
+#fiveMinGameButton:active,
+#prevPage:active,
+#nextPage:active,
+#closeTutorial:active,
+#startFromTutorial:active {
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -232,7 +265,8 @@ h1 {
 #voiceButton,
 #drawButton,
 #surrenderButton,
-#exitButton {
+#exitButton,
+#languageSelector {
     padding: 12px 24px;
     font-size: 16px;
     margin: 10px 5px 0 5px;
@@ -244,6 +278,15 @@ h1 {
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+/* Language selector */
+#languageSelector {
+    background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
+}
+#languageSelector:hover {
+    background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
 }
 
 /* Voice button */
@@ -459,8 +502,13 @@ h1 {
     }
     
     #startButton,
+    #tutorialButton,
+    #closeTutorial,
+    #startFromTutorial,
     #freeGameButton,
-    #fiveMinGameButton {
+    #fiveMinGameButton,
+    #prevPage,
+    #nextPage {
         font-size: 16px;
         padding: 12px 30px;
     }

@@ -618,6 +618,129 @@ document.addEventListener("DOMContentLoaded", () => {
         statusElement.textContent = turnMsg;
         voiceButton.disabled = false;
     });
+
+    // Tutorial functionality
+    const tutorialButton = document.getElementById("tutorialButton");
+    const tutorialScreen = document.getElementById("tutorial-screen");
+    const closeTutorial = document.getElementById("closeTutorial");
+    const startFromTutorial = document.getElementById("startFromTutorial");
+    const prevPage = document.getElementById("prevPage");
+    const nextPage = document.getElementById("nextPage");
+    const tutorialPage = document.getElementById("tutorialPage");
+    
+    let currentPage = 1;
+    const totalPages = 5;
+    let tutorialSpeechSynth = window.speechSynthesis;
+
+    // Tutorial page texts for voice reading
+    const tutorialTexts = {
+        1: "Welcome to Phantom Moves! This is a revolutionary chess game where you can play using voice commands. No need to touch the board, just speak your moves and watch them happen. You can use voice control with your microphone to give chess commands in English or Spanish. Choose from timed games of 5, 10, or 15 minutes, or play without time limits. Switch between English and Spanish at any time during the game.",
+        2: "Basic Voice Commands. To make a move, use this format: Move, piece name, to, square coordinate. For example: Move knight to e4. The chess pieces you can say are: Pawn in English, or peón in Spanish. Rook in English, or torre in Spanish. Knight in English, or caballo in Spanish. Bishop in English, or alfil in Spanish. Queen in English, or reina or dama in Spanish. And King in English, or rey in Spanish.",
+        3: "Advanced Commands. For castling, you can say: Castle kingside, or O O. In Spanish: enroque corto. For queenside castling, say: Castle queenside, or O O O. In Spanish: enroque largo. To read all moves made so far, say: Read. In Spanish: leer. To undo the last move, say: Undo. In Spanish: deshacer. To offer a draw, say: Draw. In Spanish: tablas or empate. And to resign, say: Resign. In Spanish: rendirse.",
+        4: "How to Play. Step 1: Select your time control. Choose your preferred game duration: 5, 10, or 15 minutes per player, or unlimited time. Step 2: Start the game. Click Start Game to begin. White moves first. Step 3: Activate voice recognition. Click the Speak button or press the V key to start listening. Step 4: Speak your move. Say your command clearly, for example: Move pawn to e4. Step 5: Alternate turns. Players take turns speaking their moves. The timer switches automatically. Pro tip: You can also drag pieces with your mouse if you prefer traditional play.",
+        5: "Tips and Tricks. For voice recognition: Speak clearly and at a moderate pace. Use a quiet environment for best results. Wait for the Listening indicator before speaking. Press V key for quick voice activation. For timer management: The timer turns orange when you have 30 seconds left. The timer turns red and pulses when you have 10 seconds left. Make your moves quickly when time is running low. For language switching: Use the language selector to switch between English and Spanish. All voice commands and announcements will update automatically. You can change language at any time during the game. For move validation: Only legal moves will be executed. If a move is invalid, you will see an error message. The game detects check, checkmate, and stalemate automatically. You are now ready to play! Click Start Game to begin your voice-controlled chess adventure."
+    };
+
+    function speakTutorialPage(pageNumber) {
+        // Cancel any ongoing speech
+        tutorialSpeechSynth.cancel();
+        
+        // Create utterance for the current page
+        const utterance = new SpeechSynthesisUtterance(tutorialTexts[pageNumber]);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        // Get voices and set preferred voice
+        let voices = tutorialSpeechSynth.getVoices();
+        if (voices.length === 0) {
+            tutorialSpeechSynth.onvoiceschanged = function() {
+                voices = tutorialSpeechSynth.getVoices();
+                setVoiceAndSpeak();
+            };
+        } else {
+            setVoiceAndSpeak();
+        }
+        
+        function setVoiceAndSpeak() {
+            const englishVoices = voices.filter(voice => voice.lang.includes('en'));
+            const preferredVoice = englishVoices.find(voice => voice.name.includes('Google')) || 
+                                  englishVoices[0] || 
+                                  voices[0];
+            
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            
+            tutorialSpeechSynth.speak(utterance);
+        }
+    }
+
+    function updateTutorialPage() {
+        // Hide all pages
+        document.querySelectorAll('.tutorial-page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // Show current page
+        const currentPageElement = document.querySelector(`[data-page="${currentPage}"]`);
+        currentPageElement.classList.add('active');
+        
+        // Scroll to top of tutorial content
+        document.querySelector('.tutorial-content').scrollTop = 0;
+        
+        // Update page indicator
+        tutorialPage.textContent = `Page ${currentPage} of ${totalPages}`;
+        
+        // Update button states
+        prevPage.disabled = currentPage === 1;
+        nextPage.disabled = currentPage === totalPages;
+        
+        // Read the page content with voice
+        speakTutorialPage(currentPage);
+    }
+
+    tutorialButton.addEventListener('click', () => {
+        startScreen.style.display = "none";
+        tutorialScreen.style.display = "block";
+        currentPage = 1;
+        updateTutorialPage();
+    });
+
+    closeTutorial.addEventListener('click', () => {
+        tutorialSpeechSynth.cancel(); // Stop any ongoing speech
+        tutorialScreen.style.display = "none";
+        startScreen.style.display = "flex";
+    });
+
+    startFromTutorial.addEventListener('click', () => {
+        tutorialSpeechSynth.cancel(); // Stop any ongoing speech
+        tutorialScreen.style.display = "none";
+        container.style.display = "flex";
+        
+        resetGame();
+        updateTimerDisplay();
+        switchTimerActive();
+        
+        const turnMsg = currentLanguage === 'en-US' ? "White's turn" : "Turno de Blancas";
+        statusElement.textContent = turnMsg;
+        voiceButton.disabled = false;
+    });
+
+    prevPage.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updateTutorialPage();
+        }
+    });
+
+    nextPage.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updateTutorialPage();
+        }
+    });
 });
 
 const startScreen = document.getElementById("start-screen");
